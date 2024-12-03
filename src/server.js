@@ -1,1 +1,0 @@
-console.log("welcome to fullstack pizza-mern application");

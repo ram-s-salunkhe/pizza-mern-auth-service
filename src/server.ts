@@ -5,6 +5,7 @@ function welcome(name: string) {
 
   const u1 = user.name;
   console.log(u1);
+
   return name;
 }
 

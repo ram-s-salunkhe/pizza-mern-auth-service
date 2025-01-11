@@ -9,6 +9,8 @@ app.get('/', (req, res) => {
   res.send('welcome to auth service');
 });
 
+app.use(express.json());
+
 app.use('/auth', authRouter);
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

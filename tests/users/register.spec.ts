@@ -113,7 +113,7 @@ describe('POST /auth/register', () => {
       expect(users[0].role).toBe(Roles.CUSTOMER);
     });
 
-    it('should store the  hashed password in the database', async () => {
+    it('should store the hashed password in the database', async () => {
       // arrange
       const userData = {
         firstName: 'Ram',
@@ -155,5 +155,23 @@ describe('POST /auth/register', () => {
     });
   });
 
-  describe('Fields are missing', () => {});
+  describe('Fields are missing', () => {
+    it('should return 400 status code if email field is missing', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'Ram',
+        lastName: 'S',
+        email: '',
+        password: 'secret',
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+  });
 });

@@ -12,8 +12,10 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        projectService: {
+          // tsconfigRootDir: import.meta.dirname,
+          allowDefaultProject: ['*.js','*.mjs','*.ts','*.json'],
+        },
       },
     },
     rules: {
@@ -22,4 +24,5 @@ export default tseslint.config(
       '@typescript-eslint/no-misused-promises': 'off',
     },
   },
+  
 );

@@ -9,23 +9,23 @@ export const truncateTables = async (connection: DataSource) => {
 };
 
 export const isJwt = (token: string | null): boolean => {
-  if(token === null) {
+  if (token === null) {
     return false;
   }
-  
+
   const parts = token.split('.');
 
-  if(parts.length !== 3) {
+  if (parts.length !== 3) {
     return false;
   }
 
   try {
-    parts.forEach(part => {
-      Buffer.from(part, "base64").toString("utf-8");
+    parts.forEach((part) => {
+      Buffer.from(part, 'base64').toString('utf-8');
     });
     return true;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch(err) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
     return false;
   }
-}
+};

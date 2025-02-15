@@ -7,23 +7,29 @@ export default tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   {
-    ignores: ['dist', 'node_modules', 'eslint.config.mjs', 'jest.config.js'],
+    ignores: [
+      'dist',
+      'node_modules',
+      'eslint.config.mjs',
+      'jest.config.js',
+      'scripts',
+    ],
   },
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          // projectService: true,
-          // tsconfigRootDir: import.meta.dirname,
-          allowDefaultProject: ['*.js','*.mjs','*.ts','*.json'],
-        },
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
       // 'no-console':'error',
       // 'dot-notation': 'error',
       '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+      ]
     },
   },
-  
 );

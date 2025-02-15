@@ -155,7 +155,7 @@ describe('POST /auth/register', () => {
       expect(users).toHaveLength(1);
     });
 
-    it("should return the access token and refresh token inside a cookie", async () => {
+    it('should return the access token and refresh token inside a cookie', async () => {
       // arrange
       const userData = {
         firstName: 'Ram',
@@ -164,16 +164,16 @@ describe('POST /auth/register', () => {
         password: 'secret11',
       };
 
-
       //Act
       const response = await request(app).post('/auth/register').send(userData);
 
       interface Headers {
-        ['set-cookie']: string[]
+        ['set-cookie']: string[];
       }
 
       // Assert
-      const cookies = (response.headers as unknown as Headers)['set-cookie'] || [];
+      const cookies =
+        (response.headers as unknown as Headers)['set-cookie'] || [];
       let accessToken = null;
       let refreshToken = null;
 
@@ -192,8 +192,7 @@ describe('POST /auth/register', () => {
       expect(refreshToken).not.toBeNull();
       expect(isJwt(accessToken)).toBeTruthy();
       expect(isJwt(refreshToken)).toBeTruthy();
-
-    })
+    });
   });
 
   describe('Fields are missing', () => {

@@ -111,14 +111,10 @@
   },
   "include": [
     "src/**/*",
-    "app.spec.ts", // Add this line if the file is at the root
-    "tests/**/*.ts" // Or add this line if your test files are in a "tests" directory
+    "scripts/**/*",
+    "tests/**/*"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    // , "**/*.mjs", "**/*.js",
-    "tests"
   ]
-  // "exclude": ["app.spec.ts"]
 }

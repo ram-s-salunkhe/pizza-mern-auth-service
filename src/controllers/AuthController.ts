@@ -41,24 +41,25 @@ export class AuthController {
 
       let privateKey: Buffer;
       try {
-        privateKey = fs.readFileSync(path.join(__dirname, '../../certs/private.pem'));
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err) {
-        const error = createHttpError(500, "Error while reading private key");
+        privateKey = fs.readFileSync(
+          path.join(__dirname, '../../certs/private.pem'),
+        );
+      } catch (_err) {
+        const error = createHttpError(500, 'Error while reading private key');
         next(error);
         return;
       }
       const payload: JwtPayload = {
         sub: String(user.id),
-        role: user.role
-      }
+        role: user.role,
+      };
       const accessToken = sign(payload, privateKey, {
-        algorithm: 'RS256', 
+        algorithm: 'RS256',
         expiresIn: '1h',
         issuer: 'auth-service',
       });
 
-      const refreshToken = sign(payload, Config.REFRESH_TOKEN_SeCRET!, {
+      const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
         algorithm: 'HS256',
         expiresIn: '1y',
         issuer: 'auth-service',
@@ -68,15 +69,15 @@ export class AuthController {
         domain: 'localhost',
         sameSite: 'strict',
         maxAge: 1000 * 60 * 60, // 1h
-        httpOnly: true // very important
-      })
+        httpOnly: true, // very important
+      });
 
       res.cookie('refreshToken', refreshToken, {
         domain: 'localhost',
         sameSite: 'strict',
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        httpOnly: true // very important
-      })
+        httpOnly: true, // very important
+      });
 
       res.status(201).json({ id: user.id });
     } catch (err) {

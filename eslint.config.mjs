@@ -28,7 +28,8 @@ export default tseslint.config(
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }, // argsIgnorePattern: "^_" → Ignores unused function parameters that start with an underscore (_).
+                                                                      // caughtErrorsIgnorePattern: "^_" → Ignores unused variables in catch blocks that start with an underscore (_).
       ],
     },
   },

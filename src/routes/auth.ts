@@ -45,4 +45,8 @@ router.post('/login', loginValidator, (async (
   await authController.login(req, res, next);
 }) as RequestHandler);
 
+router.get('/self', (req: Request, res: Response) =>
+  authController.self(req, res),
+);
+
 export default router;

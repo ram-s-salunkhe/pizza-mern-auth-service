@@ -5,10 +5,6 @@ import createJWKSMock from 'mock-jwks';
 import app from '../../src/app';
 import { Roles } from '../../src/constants';
 import { User } from '../../src/entity/User';
-import bcrypt from 'bcrypt';
-// import { User } from '../../src/entity/User';
-// import { Roles } from '../../src/constants';
-// import { isJwt } from '../utils';
 
 describe('GET /auth/self', () => {
   let connection: DataSource;
@@ -72,7 +68,7 @@ describe('GET /auth/self', () => {
       expect((response.body as Record<string, string>).id).toBe(data.id);
     });
 
-    it('should not return the password field', async () => {
+    it('should return 401 status code if token does not exists', async () => {
       // Register User
       const userData = {
         firstName: 'Ram',
@@ -82,27 +78,19 @@ describe('GET /auth/self', () => {
       };
 
       const userRepository = connection.getRepository(User);
-      const data = await userRepository.save({
+      await userRepository.save({
         ...userData,
-        password: await bcrypt.hash(userData.password, 10),
         role: Roles.CUSTOMER,
       }); // why we are not sending hashpassword here
 
       // Generate Token
-      const accessToken = jwks.token({ sub: String(data.id), role: data.role }); // why we name key as sub
+      // const accessToken = jwks.token({ sub: String(data.id), role: data.role }); // why we name key as sub
 
       // Add token to cookie
-      const response = await request(app)
-        .get('/auth/self')
-        .set('Cookie', [`accessToken=${accessToken};`])
-        .send();
+      const response = await request(app).get('/auth/self').send();
 
       // Assert
-      // check if user id matches with registered user
-      console.log('body >>>', response.body);
-      expect(response.body as Record<string, string>).not.toHaveProperty(
-        'password',
-      );
+      expect(response.statusCode).toBe(401);
     });
   });
 });

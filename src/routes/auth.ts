@@ -32,13 +32,22 @@ const authController = new AuthController(
   credentialService,
 );
 
-router.post('/register', registerValidator, (async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  await authController.register(req, res, next);
-}) as RequestHandler);
+// router.post('/register', registerValidator, (async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) => {
+//   await authController.register(req, res, next);
+// }) as RequestHandler);
+
+router.post(
+  '/register',
+  registerValidator,
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.register(req, res, next),
+);
+
+// router.post('/register', registerValidator, authController.register.bind(authController));
 
 router.post('/login', loginValidator, (async (
   req: Request,
@@ -48,16 +57,15 @@ router.post('/login', loginValidator, (async (
   await authController.login(req, res, next);
 }) as RequestHandler);
 
-router.get('/self', authenticate, (async (req: Request, res: Response) => {
-  await authController.self(req as AuthRequest, res);
-}) as RequestHandler);
+router.get('/self', authenticate, (req: Request, res: Response) =>
+  authController.self(req as AuthRequest, res),
+);
 
 router.post(
   '/refresh',
   validateRefreshToken,
-  (req: Request, res: Response, next: NextFunction) => {
-    void authController.refresh(req as AuthRequest, res, next);
-  },
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.refresh(req as AuthRequest, res, next),
 );
 
 export default router;

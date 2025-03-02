@@ -46,6 +46,7 @@ export class AuthController {
       };
 
       const accessToken = this.tokenService.generateAccessToken(payload);
+      this.logger.info('access token generated', { id: user.id });
 
       // Persist the refresh token
       const newRefreshToken = await this.tokenService.persistRefreshToken(user);
@@ -54,26 +55,44 @@ export class AuthController {
         ...payload,
         id: String(newRefreshToken.id),
       });
+      this.logger.info('refresh token generated', { id: user.id });
 
-      res.cookie('accessToken', accessToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60, // 1h
-        httpOnly: true, // very important
-      });
+      this.setCookieResponse(res, accessToken, refreshToken);
+      // res.cookie('accessToken', accessToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60, // 1h
+      //   httpOnly: true, // very important
+      // });
 
-      res.cookie('refreshToken', refreshToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        httpOnly: true, // very important
-      });
+      // res.cookie('refreshToken', refreshToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      //   httpOnly: true, // very important
+      // });
 
       res.status(201).json({ id: user.id });
     } catch (err) {
       next(err);
       return;
     }
+  }
+
+  setCookieResponse(res: Response, accessToken: string, refreshToken: string) {
+    res.cookie('accessToken', accessToken, {
+      domain: 'localhost',
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60, // 1h
+      httpOnly: true, // very important
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      domain: 'localhost',
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      httpOnly: true, // very important
+    });
   }
 
   async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
@@ -116,6 +135,7 @@ export class AuthController {
       };
 
       const accessToken = this.tokenService.generateAccessToken(payload);
+      this.logger.info('access token generated', { id: user.id });
 
       // Persist the refresh token
       const newRefreshToken = await this.tokenService.persistRefreshToken(user);
@@ -124,20 +144,22 @@ export class AuthController {
         ...payload,
         id: String(newRefreshToken.id),
       });
+      this.logger.info('refresh token generated', { id: user.id });
 
-      res.cookie('accessToken', accessToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60, // 1h
-        httpOnly: true, // very important
-      });
+      this.setCookieResponse(res, accessToken, refreshToken);
+      // res.cookie('accessToken', accessToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60, // 1h
+      //   httpOnly: true, // very important
+      // });
 
-      res.cookie('refreshToken', refreshToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        httpOnly: true, // very important
-      });
+      // res.cookie('refreshToken', refreshToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      //   httpOnly: true, // very important
+      // });
 
       this.logger.info('User has been logged in', { id: user.id });
 
@@ -163,6 +185,8 @@ export class AuthController {
 
       const accessToken = this.tokenService.generateAccessToken(payload);
 
+      this.logger.info('access token generated', { id: req.auth.sub });
+
       const user = await this.userService.findById(Number(req.auth.sub));
 
       if (!user) {
@@ -176,30 +200,32 @@ export class AuthController {
 
       // Persist the refresh token
       const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+      this.logger.info('refresh token generated', { id: req.auth.sub });
 
       // Delete old refresh token
       await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+      this.logger.info('refresh token deleted', { id: req.auth.sub });
 
       const refreshToken = this.tokenService.generateRefreshToken({
         ...payload,
         id: String(newRefreshToken.id),
       });
 
-      res.cookie('accessToken', accessToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60, // 1h
-        httpOnly: true, // very important
-      });
+      this.setCookieResponse(res, accessToken, refreshToken);
 
-      res.cookie('refreshToken', refreshToken, {
-        domain: 'localhost',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        httpOnly: true, // very important
-      });
+      // res.cookie('accessToken', accessToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60, // 1h
+      //   httpOnly: true, // very important
+      // });
 
-      this.logger.info('User has been logged in', { id: user.id });
+      // res.cookie('refreshToken', refreshToken, {
+      //   domain: 'localhost',
+      //   sameSite: 'strict',
+      //   maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      //   httpOnly: true, // very important
+      // });
 
       res.json({ id: user.id });
     } catch (err) {

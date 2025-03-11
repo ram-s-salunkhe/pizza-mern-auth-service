@@ -10,18 +10,18 @@ describe('GET /auth/self', () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
   beforeAll(async () => {
-    jwks = createJWKSMock('http://localhost:5501');
+    jwks = createJWKSMock('http://localhost:5501'); // create jwks-mock sever (key hosted on this URL)
     connection = await AppDataSource.initialize();
   });
 
   beforeEach(async () => {
-    jwks.start();
+    jwks.start(); // start jwks-mock server on every test
     await connection.dropDatabase();
     await connection.synchronize();
   });
 
   afterEach(() => {
-    jwks.stop();
+    jwks.stop(); // stop jwks-mock server on every test
   });
 
   afterAll(async () => {

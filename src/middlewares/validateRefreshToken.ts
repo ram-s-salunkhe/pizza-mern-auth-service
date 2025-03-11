@@ -14,6 +14,7 @@ export default expressjwt({
     return refreshToken;
   },
   async isRevoked(request: Request, token) {
+    // this function cheek refresh token is deleted from Database , token parameter - getToken() function parsed token and passed to isRevoked() function
     try {
       const refreshTokenRepo = AppDataSource.getRepository(RefreshToken);
       const refreshToken = await refreshTokenRepo.findOne({
